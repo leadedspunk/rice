@@ -1,0 +1,98 @@
+#!/usr/bin/python3
+import json
+import subprocess
+import time
+from PIL import Image, ImageDraw
+
+art = "/tmp/spotify_art.png"
+playing = ""
+lasturl = ""
+
+spotify_status = open("/tmp/spotify_status", "w")
+spotify_playing = open("/tmp/spotify_playing", "w")
+spotify_position= open("/tmp/spotify_pos", "w")
+
+def transform_image_to_circle(image_path):
+    image = Image.open(image_path)
+
+    mask = Image.new('L', image.size, 0)
+    draw = ImageDraw.Draw(mask)
+    width, height = image.size
+    radius = min(width, height) // 2
+    draw.ellipse((0, 0, radius * 2, radius * 2), fill=255)
+
+    image.putalpha(mask)
+
+    image.save(image_path)
+
+while True:
+    title = subprocess.run(
+            ["playerctl","metadata","xesam:title"],
+            capture_output= True,
+            text= True
+        ).stdout.strip()
+
+    artist = subprocess.run(
+            ["playerctl","metadata","xesam:artist"],
+            capture_output= True,
+            text= True
+        ).stdout.strip()
+
+    artUrl = subprocess.run(
+            ["playerctl","metadata","mpris:artUrl"],
+            capture_output= True,
+            text= True
+        ).stdout.strip()
+
+    status = subprocess.run(
+            ["playerctl","status"],
+            capture_output= True,
+            text= True
+        ).stdout.strip()
+
+    length = subprocess.run(
+            ["playerctl","metadata","mpris:length"],
+            capture_output= True,
+            text= True
+        ).stdout.strip()
+
+    if status == "Paused":
+        subprocess.run(
+            ["eww","update", "play_pause="],
+        )
+    else:
+        subprocess.run(
+            ["eww","update", "play_pause="],
+        )
+
+    if artUrl != lasturl:
+        subprocess.run(
+                ["curl", artUrl, "-o", art]
+            )
+        lasturl = artUrl
+        transform_image_to_circle(art)
+        subprocess.run(
+            ["eww","update", "spotify_art=/tmp/spotify_art.png"],
+        )
+
+    if title != playing:
+        playing = title
+        txt = title + " - " + artist
+        spotify_playing.write(txt)
+        spotify_playing.write('\n')
+        spotify_playing.flush()
+
+    pos = subprocess.run(
+            ["playerctl","position"],
+            capture_output= True,
+            text= True
+        ).stdout.strip()
+    pos = (float(pos) / (float(length) / 1000000)) * 100
+    pos = int(pos)
+    
+    txt = str(pos) + "\n"
+    spotify_position.write(txt)
+    # spotify_position.write('\n')
+    spotify_position.flush()
+
+    time.sleep(0.1)

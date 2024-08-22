@@ -1,0 +1,92 @@
+(defvar eww "$HOME/.local/bin/eww -c $HOME/.config/eww/bar")
+
+(defwindow bar
+  :monitor 0
+  :geometry (geometry :x "0%"
+    :y "5px"
+    :width "99%"
+    :height "30px"
+  :anchor "top center")
+  :stacking "fg"
+  :windowtype "dock"
+  :wm-ignore false
+  :exclusive true
+  :namespace "bar"
+  
+  (box
+    (box :class "left-box"
+    )
+    (box :class "middle-box"
+      (time)
+    )
+    (box
+      :class "right-box"
+      :space-evenly "false"
+      :halign "end"
+      ;(media)
+      (power)
+    )
+  )
+)
+
+(defwidget time []
+  (box
+    :halign "center"
+    {formattime(EWW_TIME, "%T", "Asia/Karachi")}
+  )
+)
+
+
+(defwidget power []
+  (eventbox
+    ; :onhover "${eww} update p_color=power-c"
+    :onhover "${eww} update power=true"
+	:onhoverlost "${eww} update power=false"
+	; :onhoverlost "${eww} update p_color=power-w"
+    (box
+    ;   (box :class "${p_color}"
+    ;     "⏻"
+    ;   )
+      (box		:orientation "v"
+          :space-evenly "false"
+          :vexpand "false"
+          :class "powermenu"
+          (revealer	:transition "slidedown"
+            :reveal power
+            :duration "550ms"
+            (box		:orientation "v"
+              :space-evenly "false"
+              
+              (button   	:class "button-bspres"
+                :tooltip "BSPWM Restart"
+              :onclick "bspc wm -r" "" )
+              
+              (button		:class "button-reb"
+                :tooltip "Reboot"
+              :onclick "reboot"	"")
+              
+              (button		:class "button-quit"
+                :tooltip "Logout"
+              :onclick "killall bspwm" "")
+              
+              (button		:class "button-lock"
+                :tooltip "Lock Screen"
+              :onclick "betterlockscreen -l"	"")))
+          
+          (button		:class "button-off"
+            :tooltip "Shutdown"
+          :onclick "shutdown now"	"")
+        ))
+        
+      )
+    )
+    (defvar p_color "power-w")
+    (defvar power false)
+    
+    (defwidget media []
+      (box :class "media-w"
+        :anchor "end"
+        :halign "end"
+        "♫"
+      )
+    )

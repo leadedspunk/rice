@@ -1,0 +1,181 @@
+@charset "UTF-8";
+
+$p_color: white;
+$bg: #000000;
+$red: #bf616a;
+
+$fa-font-path: "./fontawesome/webfonts";
+
+.bar {
+    background-color: transparent;
+    color: white;
+    border-radius: 10px;
+    opacity: 0.9;
+    font-family: 'Font Awesome 6 Free';
+    padding-bottom: 5px;
+}
+
+.time{
+    font-family: 'Franklin Gothic';
+    padding-right: 10px;
+    padding-left: 15px;
+    opacity: 1;
+}
+
+.spotify{
+    font-family: 'Franklin Gothic';
+    border-radius: 10px;
+    margin-right: 5px;
+    opacity: 1;
+}
+
+.spt_img{
+    padding-right: 3px;
+    padding-left: 3px;
+}
+
+.spt_bar > trough{
+    background-color: #252525;
+    border-color: transparent;
+    min-width: 130px;
+}
+
+.spt_bar > trough > progress{
+    background-color: #c4c4c4;
+    border-color: #c4c4c4;
+}
+
+.spt_bar{
+    opacity: 0.9;
+}
+
+.spt_box{
+    padding-left: 5px;
+    padding-right: 7px;
+}
+
+.m_btn{
+    background-image: none;
+    border-color: transparent;
+    box-shadow: none;
+    text-shadow: none;
+    border-radius: 20px;
+    font-family: 'Font Awesome 6 Free';
+    color: #ffffff;
+    padding-right: 0px;
+    padding-left: 3px;
+}
+.m_btn > label{
+    font-size: 15px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding-top: 0px;
+}
+
+.s_name{
+    padding-left: 1px;
+    font-size: 11px;
+}
+
+
+.middle-box{
+    background-color: transparent;
+}
+
+.section{
+    background-color: $bg;
+    border-radius: 10px;
+    opacity: 0.9;
+}
+
+.sys-sec{
+    background-color: #ffffff;
+    color: #000000;
+    border-radius: 10px;
+    opacity: 0.8;
+}
+
+.acc{
+    color: white;
+    margin-right: 5px;
+    margin-left: 5px;
+    background-image: none;
+    border-color: $bg;
+    box-shadow: none;
+    text-shadow: none;
+    border-radius: 10px;
+}
+
+.applet{
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.power-win{
+    opacity: 1.0;
+    background-color: $bg;
+    border-radius: 1px;
+}
+
+.apps{
+    border-radius: 10px;
+    background-color: #ffffff;
+    color: #000000;
+    opacity: 1.0;
+}
+
+.aspace{
+    background-color: transparent;
+    color: #e9c43d;
+    opacity: 1;
+}
+.ispace{
+    background-color: transparent;
+    opacity: 0.3;
+}
+.sspace{
+    background-color: transparent;
+    color: #bf616a;
+    opacity: 1;
+}
+.space{
+    font-family: 'Font Awesome 6 Free';
+    border-radius: 10px;
+    padding-right: 3px;
+    padding-left: 3px;
+    margin-right: 3px;
+}
+.windowtitle{
+    font-family: 'Franklin Gothic';
+    margin-left: 10px;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: $bg;
+    opacity: 0.9;
+}
+
+.yellow{
+    color: #ebcb8b;
+}
+
+.red{
+    color: $red;
+}
+
+.orange{
+    color: #d08770;
+}
+
+.green{
+    color: #a3be8c;
+}
+
+.purple{
+    color: #b48ead;
+}
+
+.notif{
+    color: $red;
+}

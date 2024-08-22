@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+grim $(date +'/home/rayven/Pictures/Screenshot/%s_grim.png')
+notify-send "Screenshot Taken" -a "ss"

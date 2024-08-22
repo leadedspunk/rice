@@ -1,0 +1,51 @@
+#!/usr/bin/python3
+import json
+import subprocess
+import time
+
+rate = 0.2
+dpath = "/home/rayven/.config/hypr/data"
+
+mon1spaces = open("/tmp/wspaces_HDMI-A-1", "w")
+mon1win = open("/tmp/wspaces_HDMI-A-1_win", "w")
+
+while True:
+    jstring = subprocess.run(
+        ["hyprctl","-j","workspaces"],
+        capture_output= True,
+        text= True
+    ).stdout
+    wspaces = json.loads(jstring)
+    jstring = subprocess.run(
+        ["hyprctl", "-j", "activeworkspace"],
+        capture_output= True,
+        text= True
+    ).stdout
+    activespace = json.loads(jstring)
+    activespace = activespace["id"]
+    cspace = 0
+    mon1 = []
+    for space in wspaces:
+        cspace += 1
+        if space["monitor"] == "HDMI-A-1":
+            if space["id"] == activespace:
+                ewwclass = "aspace"
+                data = space["lastwindowtitle"]
+                if len(data) > 65:
+                    activewindow = (data[:65] + '..')
+                else:
+                    activewindow = data
+                mon1win.write(activewindow + "\n")
+                mon1win.flush()
+            elif int(space["id"]) < 0 :
+                ewwclass = "sspace"
+            else:
+                ewwclass = "ispace"
+
+            if ewwclass != "sspace":
+                mon1.append([space["id"], ewwclass])
+    mon1.sort()
+    json.dump(mon1, mon1spaces)
+    mon1spaces.write('\n')
+    mon1spaces.flush()
+    time.sleep(rate)

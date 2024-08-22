@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+protonvpn-cli d >> ~/scriptlog
+protonvpn-cli login ayaal >> ~/scriptlog
+protonvpn-cli c --p2p >> ~/scriptlog

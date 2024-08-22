@@ -1,0 +1,257 @@
+(defvar eww "$HOME/.local/eww/eww -c $HOME/.config/eww")
+(defvar spotify_art "/tmp/spotify_art.png")
+(defvar play_pause "")
+(defvar spot "false")
+
+(defpoll vpnstat
+	:initial "Disconnected"
+	:interval "5s"
+	`protonvpn-cli s`)
+	  
+(deflisten mon1 :initial "[[1,2]]"
+	`tail -F /tmp/wspaces_HDMI-A-1`)
+
+(deflisten mon1win :initial "Hypr"
+	`tail -F /tmp/wspaces_HDMI-A-1_win`)
+
+(deflisten spotify_pos :initial "0"
+	`tail -F /tmp/spotify_pos`)
+
+(deflisten spotify_playing :initial "-"
+	`tail -F /tmp/spotify_playing`)
+
+(defwindow bar
+  :monitor 0
+  :geometry (geometry :x "0%"
+    :y "4px"
+    :width "99%"
+    :height "30px"
+  	:anchor "top center")
+  :stacking "fg"
+  :windowtype "dock"
+  :wm-ignore true
+  :exclusive true
+  :namespace "bar"
+  
+  (box
+	
+    (box 
+		:class "left-box"
+		:space-evenly "false"
+		:halign "start"
+		(spaces)
+		(windowtitle)
+    )
+    ; (box 
+	; 	:class "middle-box"
+	; 	:halign "center"
+	; 	(windowtitle)
+    ; )
+    (box
+    	:class "right-box"
+    	:space-evenly "false"
+    	:halign "end"
+		(spotify)
+		(box :class "section"
+			(time)
+			(box :class "sys-sec"
+				(vpn)
+				(network)
+				(notification)
+			)
+		)
+		; (box :class "apps"
+		; 	(discord)
+		; 	(spotify)
+		; )
+		
+    )
+  )
+)
+
+(defwidget spotify []
+	(box :class "spotify section"
+		:space-evenly "false"
+		(eventbox
+			:onhover "${eww} update spot=true"
+			:onhoverlost "${eww} update spot=false"
+			:space-evenly "false"
+			(box
+				:space-evenly "false"
+				(image
+					:class "spt_img"
+					:halign "end"
+					:image-height 25
+					:path spotify_art)
+				
+				(revealer
+					:transition "Slideright"
+					:reveal spot
+					:duration "550ms"
+					:anchor "end"
+					(box 
+						:space-evenly "false"
+						:valign "end"
+						; (box
+						; 	:orientation "v"
+						; 	:space-evenly "false"
+						; 	(button
+						; 		:halign "start"
+						; 		:class "m_btn"
+						; 		:onclick "playerctl next" ""
+						; 	)
+						; 	(button
+						; 		:halign "start"
+						; 		:class "m_btn"
+						; 		:onclick "playerctl next" ""
+						; 	)
+						; )
+						(button
+							:class "m_btn"
+							:onclick "playerctl previous" ""
+						)
+						(button
+							:class "m_btn"
+							:onclick "playerctl play-pause" play_pause
+						)
+						(button
+							:class "m_btn"
+							:onclick "playerctl next" ""
+						)
+					)
+				)
+			)
+		)
+		(box
+			:class "spt_box"
+			:valign "center"
+			:space-evenly "false"
+			:orientation "v"
+			:spacing "3"
+			(label
+				:limit-width "20"
+				:valign "start"
+				:halign "start"
+				:class "s_name"
+				:text "${spotify_playing}"
+			)
+			(progress :class "spt_bar"
+				:valign "end"
+				:halign "fill"
+				:value spotify_pos
+				:orientation "h"
+			)
+		)
+	)
+)
+
+(defwidget time []
+  (box :class "time"
+    :halign "center"
+    {formattime(EWW_TIME, "%T", "Asia/Karachi")}
+  )
+)
+
+(defwidget spaces []
+	(box
+		(for space in mon1
+			(box
+				:class "${space[1]} space"
+			"")
+		)
+	)
+)
+
+(defwidget windowtitle []
+	(box
+		:class "windowtitle"
+		"${mon1win ?: ''}"
+	)
+)
+
+(defwidget power []
+	(eventbox
+		:onhover "${eww} update power=true"
+		:onhoverlost "${eww} update power=false"
+		(box
+			:space-evenly "false"
+			(button :class "acc"
+				:onclick "${eww} reload " ""
+			)
+			(revealer
+				:transition "Slideright"
+				:reveal power
+				:duration "550ms"
+				:anchor "end"
+				(box :orientation "hs"
+					(button		
+						:class "pbtn orange" 				
+						:tooltip "Lock Screen"	 
+						:onclick "betterlockscreen -l"	"")	
+					(button		
+						:class "pbtn green" 				
+						:tooltip "Logout" 		 
+						:onclick "killall bspwm" "")
+					(button		
+						:class "pbtn yellow"					
+						:tooltip "Reboot"		 
+						:onclick "reboot"	"⏻")
+					(button		
+						:class "pbtn red"					
+						:tooltip "Shutdown"		 
+						:onclick "shutdown now"	"⏻")	
+				)
+			)
+		)
+	)
+)
+
+(defvar power false)
+
+(defwidget discord []
+	(box :class "applet"
+	  :anchor "end"
+	  :halign "end"
+	  ""
+	)
+)
+
+(defwidget notification []
+	(box :class "applet"
+	  :halign "end"
+	  ""
+	)
+)
+
+(defwidget vpn []
+	(box :class "applet"
+		:tooltip vpnstat
+	  :halign "end"
+	  ""
+	)
+)
+
+(defwidget network []
+	(box :class "applet"
+	  :halign "end"
+	  ""
+	)
+)
+; (defwindow power-win
+; 	:monitor 0
+; 	:geometry (geometry :x "18px"
+; 		:y "2px"
+; 		:width "100px"
+; 		:height "100px"
+; 		:anchor "top right")
+; 	:stacking "fg"
+; 	:windowtype "dock"
+; 	:wm-ignore false
+; 	(box
+; 		(image
+; 			:image-width "100px"
+; 			:image-height "100px"
+; 			:path "$HOME/.config/hypr/profile.jpg"
+; 		)
+; 	)		
+; )
